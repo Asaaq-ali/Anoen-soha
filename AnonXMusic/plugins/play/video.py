@@ -50,11 +50,11 @@ async def song_downloader(client, message: Message):
     try:
         with yt_dlp.YoutubeDL({"quiet": True}) as ytdl:
           x = ytdl.extract_info(yturl, download=False)
-      title = (x["title"]).title()
-      title = re.sub("\W+", " ", title)
-      thumb_image_path = await CallbackQuery.message.download()
-      duration = x["duration"]
-      if stype == "video":
+       title = (x["title"]).title()
+       title = re.sub("\W+", " ", title)
+       thumb_image_path = await CallbackQuery.message.download()
+       duration = x["duration"]
+       if stype == "video":
           thumb_image_path = await CallbackQuery.message.download()
           width = CallbackQuery.message.photo.width
           height = CallbackQuery.message.photo.height
@@ -87,7 +87,7 @@ async def song_downloader(client, message: Message):
         except Exception as e:
             print(e)
             return await mystic.edit_text(_["song_10"])
-        os.remove(file_path)
+         os.remove(file_path)
     elif stype == "audio":
         try:
             filename = await YouTube.download(
