@@ -72,7 +72,6 @@ def stream_markup_timer(_, chat_id, played, dur):
 
 def stream_markup(_, chat_id):
     return [
-    return [
         [
             InlineKeyboardButton(
                 text="▶️", callback_data=f"ADMIN Resume|{chat_id}"
