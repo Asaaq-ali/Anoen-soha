@@ -49,32 +49,71 @@ async def song_downloader(client, message: Message):
     await m.edit("<b>⇜ جـارِ التحميل ▬▭ . . .</b>")
     try:
         with yt_dlp.YoutubeDL({"quiet": True}) as ytdl:
-            info_dict = ydl.extract_info(yturl, download=False)
-            video_file = ydl.prepare_filename(info_dict)
-            ydl.process_info(info_dict)
-        rep = f"✧ <a href=https://t.me/Mlze1bot> 𝑺𝒐𝒖𝒓𝒄𝒆 𝒅𝒊𝒏𝒂 </a> : @{app.username} "
-        host = str(info_dict["upload_audio"])
-        secmul, dur, dur_arr = 1, 0, duration.split(":")
-        for i in range(len(dur_arr) - 1, -1, -1):
-            dur += int(float(dur_arr[i])) * secmul
-            secmul *= 60
-        await m.edit("<b>⇜ جـارِ الرفـع ▬▬ . . .</b>")
-        await message.reply_video(
-            video=video_file,
-            caption=rep,
-            title=title,
-            performer=host,
-            thumb=thumb_name,
-            duration=dur,
+        x = ytdl.extract_info(yturl, download=False)
+    title = (x["title"]).title()
+    title = re.sub("\W+", " ", title)
+    thumb_image_path = await CallbackQuery.message.download()
+    duration = x["duration"]
+    if stype == "video":
+        thumb_image_path = await CallbackQuery.message.download()
+        width = CallbackQuery.message.photo.width
+        height = CallbackQuery.message.photo.height
+        try:
+            file_path = await YouTube.download(
+                yturl,
+                mystic,
+                songvideo=True,
+                format_id=format_id,
+                title=title,
+            )
+        except Exception as e:
+            return await mystic.edit_text(_["song_9"].format(e))
+        med = InputMediaVideo(
+            media=file_path,
+            duration=duration,
+            width=width,
+            height=height,
+            thumb=thumb_image_path,
+            caption=title,
+            supports_streaming=True,
         )
-        await m.delete()
-
-    except Exception as e:
-        await m.edit(" error, wait for bot owner to fix")
-        print(e)
-
-    try:
-        remove_if_exists(video_file)
-        remove_if_exists(thumb_name)
-    except Exception as e:
-        print(e)
+        await mystic.edit_text(_["song_11"])
+        await app.send_chat_action(
+            chat_id=CallbackQuery.message.chat.id,
+            action="upload_video",
+        )
+        try:
+            await CallbackQuery.edit_message_media(media=med)
+        except Exception as e:
+            print(e)
+            return await mystic.edit_text(_["song_10"])
+        os.remove(file_path)
+    elif stype == "audio":
+        try:
+            filename = await YouTube.download(
+                yturl,
+                mystic,
+                songaudio=True,
+                format_id=format_id,
+                title=title,
+            )
+        except Exception as e:
+            return await mystic.edit_text(_["song_9"].format(e))
+        med = InputMediaAudio(
+            media=filename,
+            caption=title,
+            thumb=thumb_image_path,
+            title=title,
+            performer=x["uploader"],
+        )
+        await mystic.edit_text(_["song_11"])
+        await app.send_chat_action(
+            chat_id=CallbackQuery.message.chat.id,
+            action="upload_audio",
+        )
+        try:
+            await CallbackQuery.edit_message_media(media=med)
+        except Exception as e:
+            print(e)
+            return await mystic.edit_text(_["song_10"])
+        os.remove(filename)
