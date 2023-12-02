@@ -49,23 +49,23 @@ async def song_downloader(client, message: Message):
     await m.edit("<b>⇜ جـارِ التحميل ▬▭ . . .</b>")
     try:
         with yt_dlp.YoutubeDL({"quiet": True}) as ytdl:
-        x = ytdl.extract_info(yturl, download=False)
-    title = (x["title"]).title()
-    title = re.sub("\W+", " ", title)
-    thumb_image_path = await CallbackQuery.message.download()
-    duration = x["duration"]
-    if stype == "video":
-        thumb_image_path = await CallbackQuery.message.download()
-        width = CallbackQuery.message.photo.width
-        height = CallbackQuery.message.photo.height
-        try:
-            file_path = await YouTube.download(
-                yturl,
-                mystic,
-                songvideo=True,
-                format_id=format_id,
-                title=title,
-            )
+          x = ytdl.extract_info(yturl, download=False)
+      title = (x["title"]).title()
+      title = re.sub("\W+", " ", title)
+      thumb_image_path = await CallbackQuery.message.download()
+      duration = x["duration"]
+      if stype == "video":
+          thumb_image_path = await CallbackQuery.message.download()
+          width = CallbackQuery.message.photo.width
+          height = CallbackQuery.message.photo.height
+          try:
+              file_path = await YouTube.download(
+                  yturl,
+                  mystic,
+                  songvideo=True,
+                  format_id=format_id,
+                  title=title,
+              )
         except Exception as e:
             return await mystic.edit_text(_["song_9"].format(e))
         med = InputMediaVideo(
