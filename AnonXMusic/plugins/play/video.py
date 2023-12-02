@@ -34,7 +34,7 @@ async def song_downloader(client, message: Message):
     }
     try:
         results = YoutubeSearch(query, max_results=1).to_dict()
-        link = f"https://youtube.com{results[0]['url_suffix']}"
+        yturl = f"https://www.youtube.com/watch?v={vidid}"
         title = results[0]["title"][:40]
         thumbnail = results[0]["thumbnails"][0]
         thumb_name = f"{title}.jpg"
@@ -49,7 +49,7 @@ async def song_downloader(client, message: Message):
     await m.edit("<b>⇜ جـارِ التحميل ▬▭ . . .</b>")
     try:
         with yt_dlp.YoutubeDL({"quiet": True}) as ytdl:
-            info_dict = ydl.extract_info(link, download=False)
+            info_dict = ydl.extract_info(yturl, download=False)
             video_file = ydl.prepare_filename(info_dict)
             ydl.process_info(info_dict)
         rep = f"✧ <a href=https://t.me/Mlze1bot> 𝑺𝒐𝒖𝒓𝒄𝒆 𝒅𝒊𝒏𝒂 </a> : @{app.username} "
