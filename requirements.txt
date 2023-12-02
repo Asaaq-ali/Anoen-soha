@@ -1,7 +1,7 @@
 aiofiles
 aiohttp
 beautifulsoup4
-dnspython~
+dnspython
 ffmpeg-python
 gitpython
 hachoir
